@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="APIKKEYS for __UP_myname__" height="600"/>
+  <UserPref name="myname" display_name="Name" default_value="PP WIDGET Verification"/>
+  <UserPref name="bigw" display_name="BigW" />
+  <UserPref name="wowconnect" display_name="WOWCONNECT" />
+  <UserPref name="ezibuy" display_name="Ezibuy.com.au" />
+  <UserPref name="lss" display_name="Last Stop Shop" />
+  
+   <Content type="html">
+     <![CDATA[
+  
+       <div style="display:block">
+         <b>Reatiler :</b> <div style="display:inline-block" id="retailer">NONE</div>
+       </div>
+     
+       <hr/>
+       <div style='width:100%' id="simplycollect-stores-widget"></div>
+       <div style='display:block'>
+        <b>Select Retailer:</b>
+        <div style='display:inline-block' id="selectionhtml">
+        
+        </div>
+        <!-- <input id = 'apikey' name= 'apikey'/> -->
+        <input style='display:inline-block' type=button id= 'refresh' value='Load' onclick='javascript:reloadWidget()'/>
+
+                  <!-- the div where the widget will be rendered-->
+               
+                <!-- required to initialise load all the resources needed by the widget-->
+                <script type="text/javascript" src="https://connect.wow.parcelpoint.com.au/widget/v3/stores"></script>
+
+                <!-- the widget will initialise on the background-->
+                <script type="text/javascript">
+                    var protocol = 'https:' === document.location.protocol ? 'https://' : 'http://';
+                    var hostname = "apitest.parcelpoint.com.au"
+                    var url = protocol + hostname;
+                    
+                    function initialize() {
+                      var prefs = new gadgets.Prefs();
+                      console.log("initialize triggered");
+                      var bigwkey = prefs.getString('bigw')+"-BigW";
+                      var wowkey = prefs.getString('wowconnect')+"-WOWConnect"
+                      var ezbkey = prefs.getString('ezibuy')+"-Ezibuy.com.au"
+                      var lsskey = prefs.getString('lss')+"-Last Stop Shop"
+                      var htmlstr = '<select id="apikey"><option value="'+bigwkey+'">BigW</option>'+
+                                                        '<option value="'+wowkey+'">WOWConnect</option>'+
+                                                        '<option value="'+ezbkey+'">Ezibuy.com.au</option>'+
+                                                        '<option value="'+lsskey+'">Last Stop Shop</option>'+
+                                    '</select>';
+                      console.log(htmlstr);
+                      document.getElementById("selectionhtml").innerHTML = htmlstr;
+                      console.log("initialize finished");
+                    }
+                    
+                    function reloadWidget()
+                    {
+                      console.log("reload widget triggered");
+                      var apiKeyVal = document.getElementById("apikey").value;
+                      var splitText = apiKeyVal.split("-");
+                      apiKeyVal = splitText[0];
+                      document.getElementById("retailer").innerText = splitText[1];
+                      if (!apiKeyVal) {
+                        console.log("No API Key Entered");
+                        apiKeyVal = 'N58SG1BU';
+                      }
+                      
+                      try{
+                        
+                       parcelpoint.Store.destroy();
+                       
+                      } catch(ex)  {
+                       
+                        console.log(ex);
+                      }
+                      parcelpoint.Store.init({
+                                apiKey: apiKeyVal,
+                                targetDiv: "simplycollect-stores-widget",
+                                initialAddress: "Sydney",
+                                storeType: "StoreType6",
+                                messages: {
+                                  noLocationSelected: "Please select your nearest Simply Collect location."
+                                },
+                                overrideCSS: url + "/widget/v3/css/BigW",
+                                markerIcons: {
+                                    store: {
+                                      normalIcon: url + '/widgets/v3/other/client/bigw/image/bigw-store-marker-blue.png',
+                                      hoverIcon: url + '/widgets/v3/other/client/bigw/image/bigw-store-marker-gray.png',
+                                      activeIcon: url + '/widgets/v3/other/client/bigw/image/bigw-store-marker-dark-orange.png',
+                                      fullIcon: url + '/widgets/v3/other/client/bigw/image/bigw-store-marker-gray.png'
+                                    },
+                                    supermarket: {
+                                      normalIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-default.png',
+                                      hoverIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-hover.png',
+                                      activeIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-active.png',
+                                      fullIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-hover.png'
+                                    },
+                                    locker: {
+                                      normalIcon: url + '/widgets/v3/other/client/bigw/image/bigw-locker-marker-green.png',
+                                      hoverIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-hover.png',
+                                      activeIcon: url + '/widgets/v3/other/client/bigw/image/bigw-locker-marker-orange.png',
+                                      fullIcon: url + '/widgets/v3/other/client/bigw/image/wow-supermarket-marker-hover.png'
+                                    }
+                                }
+                      });
+
+                      parcelpoint.Store.display();
+                  
+                    }
+
+
+         gadgets.util.registerOnLoadHandler(initialize);
+
+  </script>  
+ 
+     
+]]>
+  </Content>
+</Module>
