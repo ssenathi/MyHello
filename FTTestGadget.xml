@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+  <ModulePrefs title="Parcel Count Reporing" height="400"/>
+  
+  <UserPref name="tableid" display_name="Fusion Table Id" default_value ="1DHDNHZPf8CCN8a157OXNV-QakBTVvTgZ_PkJeZw" />
+  <UserPref name="clientid" display_name="Google Client Id" 
+            default_value="40953741033-i7kdmah3vhn1lo4aiqjnakl1aeg7p9or.apps.googleusercontent.com"/>
+  
+   <Content type="html">
+     <![CDATA[ 
+ 
+ 
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+      google.load('visualization', '1.1', {packages: ['table','corechart']});
+  </script>
+  <script type="text/javascript" 
+          src ="https://servemefiles.appspot.com/scripts/gwt-oauth2.js">
+  </script>
+  
+  <script type="text/javascript" 
+          src="https://sites.google.com/a/woolworths.com.au/hostmyfiles/scripts/flyjsonp.min.js">
+  </script>
+  
+  <script type="text/javascript">
+
+    var GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/auth";
+    var GOOGLE_CLIENT_ID = "40953741033-i7kdmah3vhn1lo4aiqjnakl1aeg7p9or.apps.googleusercontent.com";
+    var FT_READONLY_SCOPE = "https://www.googleapis.com/auth/fusiontables.readonly";
+    var oAuthToken = null;
+    var TABLEID = "";
+    var result_rows = [];
+    function doOAuthWithGoogle()
+    {
+        console.log("doOAuthWithGoogle");
+        var req = {
+         "authUrl" : GOOGLE_AUTH_URL,
+         "clientId" : GOOGLE_CLIENT_ID,
+         "scopes" : [ FT_READONLY_SCOPE ],
+        };
+
+        oauth2.login(req, function(token) {
+            oAuthToken = token;
+            queryFTByStore(false);
+
+        }, function(error) {
+            
+            alert("Error:\n" + error);
+            oAuthToken = null;
+        });
+
+    }
+    
+    
+    function drawTable(ftrows) {
+        // var data = google.visualization.arrayToDataTable(ftrows,true)
+        var data = new google.visualization.DataTable();
+
+        //data.addColumn('string', 'Store Name');
+
+        data.addColumn('string', 'Agent Id');
+        data.addColumn('string', 'Store Name');
+        data.addColumn('string', 'Count');
+        
+        data.addRows(ftrows);
+
+        var table = new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(data, {showRowNumber: true,width:'100%', height: '100%'});
+        document.getElementById("dwnldbtn").style.display='inline-block';
+        displayTotal(ftrows);
+        result_rows = ftrows;
+    }
+    
+    function displayTotal(rows){
+        var totalCount = 0;
+        for ( i = 0 ; i < rows.length; i++ ) {
+           totalCount += Number(rows[i][2]);
+        }
+        document.getElementById("totalcount_div").innerHTML = totalCount;
+    }
+
+    function queryByStore(){
+      
+        
+        if (oAuthToken == null){
+            queryFTByStore( true);
+
+        } else {
+            queryFTByStore(false);
+        }
+
+    }
+    
+    function queryFTByStore( oAuthFlag){
+        console.log("queryFTByStore") 
+        if (oAuthFlag) {
+            doOAuthWithGoogle();
+            return;
+        }
+        var startdate = document.getElementById("startdate").value
+        var enddate = document.getElementById("enddate").value
+        var storname = document.getElementById("bannertxt").value
+        var retailer = document.getElementById("retailer").value
+        var dateFilter = "";
+        if (startdate && enddate) {
+           dateFilter = "AND 'Event_Created_On' >='"+startdate+"' and 'Event_Created_On' <= '" + enddate+"'";
+        }
+        var namefilter = "";
+        if ( storname != ""){
+          namefilter = " AND 'Name' CONTAINS IGNORING CASE '"+storname+"'"
+        }
+        var retailerfilter = "";
+        if ( retailer != "") {
+           retailerfilter = " AND 'Retailer_Name' CONTAINS IGNORING CASE '"+retailer+"'"
+        }
+        
+        var evtFilter = " AND 'Event_Type' IN "+document.getElementById("evttype").value+"";
+        var baseQuery = "https://www.googleapis.com/fusiontables/v2/query?sql=";
+        var sqlStmt = "SELECT 'ID', 'Name', SUM(count) as 'Count' FROM " + TABLE_ID +
+                      " WHERE 'Status' = 'ACTIVE' AND 'Type' DOES NOT CONTAIN IGNORING CASE 'OVERFLOW' "+
+                      dateFilter+namefilter+evtFilter+retailerfilter+" GROUP BY 'ID', 'Name' ORDER BY SUM('count') DESC";
+        console.log(sqlStmt);
+        var selStmt = encodeURIComponent(sqlStmt);
+        var access_token = "&access_token="+oAuthToken;
+        var queryURL = baseQuery+selStmt+access_token;
+        
+        FlyJSONP.get({
+            url: queryURL,
+            success: function(data) {
+                console.log(data);
+                if (data.rows)
+                   drawTable(data.rows);
+                else 
+                    window.alert("No matching data found");
+            },
+            error: function(errorMsg) {
+                window.alert(errorMsg.toString());
+                oAuthToken = null;
+            }
+        });
+
+    }
+    
+    /**
+     *
+     */
+    function dataTableToCSV() {
+      
+      // Iterate rows
+      var rows = result_rows;
+      var noOfRows = rows.length;
+      var csv_out = "";
+      for (i=0; i<noOfRows; i++) {
+        // Add row to CSV text
+        csv_out += rows[i].join(",")+"\r\n";
+      }
+      var blob = new Blob([csv_out], {type: 'text/csv;charset=utf-8'});
+            var url  = window.URL || window.webkitURL;
+            var link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+            link.href = url.createObjectURL(blob);
+            link.download = "datadownload.csv"; 
+
+            var event = document.createEvent("MouseEvents");
+            event.initEvent("click", true, false);
+            link.dispatchEvent(event); 
+      
+    }   
+    function initialize() {
+       var prefs = new gadgets.Prefs();
+       GOOGLE_CLIENT_ID = prefs.getString('clientid');
+       TABLE_ID=prefs.getString('tableid');
+    
+    }
+   
+    // Receive the Message from oAuth callback of the token.
+    window.addEventListener("message", receiveMessage, false);
+
+    function receiveMessage(event)
+     {
+        var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
+        if (origin && origin == "https://servemefiles.appspot.com")
+           oauth2.__doLogin(event.data);
+     }
+    
+    gadgets.util.registerOnLoadHandler(initialize);
+  </script>
+ 
+
+  From : <input type="date" id="startdate"/> To : <input type="date" id="enddate"/>
+  &nbsp;Banner : <select id="bannertxt">
+          <option value="">All</option>
+          <option value="BIG W">Big W</option>
+          <option value="Woolworths">Woolworths</option>
+        </select> &nbsp;Event : <select id="evttype">
+          <option value="('PARCEL_BOOKED')">Booking</option>
+          <option value="('PARCEL_ARRIVED','PARCEL_PARTIAL_ARRIVAL')">Arrival</option>
+          <option value="('PARCEL_COLLECTED')">Collected(eBay)</option>
+          <option value="('PARCEL_COMPLETE')">Complete</option>
+        </select>&nbsp;Retailer: <select id="retailer">
+          <option value="">All</option>
+          <option value="BigW">Big W</option>
+          <option value="ebay">eBay</option>
+          <option value="Ezibuy.com.au">Ezibuy (AU) </option>
+          <option value="WOWCONNECT">WOWConnect</option>
+          <option value="LastStopShop">Last Stop Shop</option>
+        </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
+  <button id="dwnldbtn" style="display:none" onclick="dataTableToCSV()">Download</button>
+ 
+  <div style='width:800px;height:600px' id='table_div'></div>
+  <hr/>
+  <center><b>Total Count : </b>&nbsp;<div style="display:inline-block" id="totalcount_div"></div></center>
+  
+]]>
+
+</Content>
+</Module>
+  
