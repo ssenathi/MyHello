@@ -233,6 +233,7 @@
           <option value="Retailer_Name">Retailer</option>
           <option value="Name">Store</option>
           <option value="State">State</option>
+          <option value="Postcode">Postcode</option>
         </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
   <button id="dwnldbtn" style="display:none" onclick="dataTableToCSV()">Download</button>
  
