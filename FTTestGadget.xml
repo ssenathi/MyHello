@@ -74,7 +74,9 @@
     function displayTotal(rows){
         var totalCount = 0;
         for ( i = 0 ; i < rows.length; i++ ) {
-           totalCount += Number(rows[i][2]);
+           //totalCount += Number(rows[i][2]);
+           // Total the count from Column 2.
+           totalCount += Number(rows[i][1]);
         }
         document.getElementById("totalcount_div").innerHTML = totalCount;
     }
