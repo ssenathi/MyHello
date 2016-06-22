@@ -30,6 +30,7 @@
     var oAuthToken = null;
     var TABLEID = "";
     var result_rows = [];
+    var groupby="Reatailer_Name"
     function doOAuthWithGoogle()
     {
         console.log("doOAuthWithGoogle");
@@ -59,7 +60,7 @@
         //data.addColumn('string', 'Store Name');
         //data.addColumn('string', 'Agent Id');
         //data.addColumn('string', 'Store Name');
-        data.addColumn('string', 'Retailer');
+        data.addColumn('string', groupby);
         data.addColumn('string', 'Parcel Count');
         
         data.addRows(ftrows);
@@ -103,6 +104,9 @@
         var enddate = document.getElementById("enddate").value
         var storname = document.getElementById("bannertxt").value
         var retailer = document.getElementById("retailer").value
+        var state = document.getElementById("state").value
+        groupby = document.getElementById("groupby").value
+        console.log("Selected Option "+ storname + " " + retailer +" " + state + " " + groupby )
         var dateFilter = "";
         if (startdate && enddate) {
            dateFilter = "AND 'Event_Created_On' >='"+startdate+"' and 'Event_Created_On' <= '" + enddate+"'";
@@ -116,11 +120,17 @@
            retailerfilter = " AND 'Retailer_Name' IN "+retailer+""
         }
         
+        var statefilter = "";
+        if ( state != "") {
+           statefilter = " AND 'State' in " + state +""
+        }
+        
+        
         var evtFilter = " AND 'Event_Type' IN "+document.getElementById("evttype").value+"";
         var baseQuery = "https://www.googleapis.com/fusiontables/v2/query?sql=";
-        var sqlStmt = "SELECT  'Retailer_Name' , SUM(count) as 'Count' FROM " + TABLE_ID +
+        var sqlStmt = "SELECT  '"+groupby+"' , SUM(count) as 'Count' FROM " + TABLE_ID +
                       " WHERE 'Status' = 'ACTIVE' AND 'Type' DOES NOT CONTAIN IGNORING CASE 'OVERFLOW' "+
-                      dateFilter+namefilter+evtFilter+retailerfilter+" GROUP BY 'Retailer_Name' ORDER BY 'Retailer_Name'";
+                      dateFilter+namefilter+evtFilter+retailerfilter+statefilter+" GROUP BY '"+groupby+"' ORDER BY SUM(Count) DESC ";
         console.log(sqlStmt);
         var selStmt = encodeURIComponent(sqlStmt);
         var access_token = "&access_token="+oAuthToken;
@@ -209,6 +219,20 @@
           <option value="('SCDropOff')">Drop Off</option>
           <option value="('WOWGROCERY')">Wow Online</option>
         
+        </select>&nbsp;State: <select id="state">
+          <option value="">All</option>
+          <option value="('NSW')">NSW</option>
+          <option value="('ACT')">ACT</option>
+          <option value="('VIC')">VIC</option>
+          <option value="('QLD')">QLD</option>
+          <option value="('SA')">SA</option>
+          <option value="('WA')">WA</option>
+          <option value="('TAS')">TAS</option>
+          <option value="('NT')">NT</option>
+        </select>&nbsp;Group By: <select id="groupby">
+          <option value="Reatailer_Name">Retailer</option>
+          <option value="Name">Store</option>
+          <option value="State">State</option>
         </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
   <button id="dwnldbtn" style="display:none" onclick="dataTableToCSV()">Download</button>
  
