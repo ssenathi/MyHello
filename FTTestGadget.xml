@@ -111,7 +111,7 @@
         }
         var retailerfilter = "";
         if ( retailer != "") {
-           retailerfilter = " AND 'Retailer_Name' IN '"+retailer+"'"
+           retailerfilter = " AND 'Retailer_Name' IN "+retailer+""
         }
         
         var evtFilter = " AND 'Event_Type' IN "+document.getElementById("evttype").value+"";
