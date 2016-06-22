@@ -230,7 +230,7 @@
           <option value="('TAS')">TAS</option>
           <option value="('NT')">NT</option>
         </select>&nbsp;Group By: <select id="groupby">
-          <option value="Reatailer_Name">Retailer</option>
+          <option value="Retailer_Name">Retailer</option>
           <option value="Name">Store</option>
           <option value="State">State</option>
         </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
