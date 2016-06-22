@@ -130,7 +130,7 @@
         var baseQuery = "https://www.googleapis.com/fusiontables/v2/query?sql=";
         var sqlStmt = "SELECT  '"+groupby+"' , SUM(count) as 'Count' FROM " + TABLE_ID +
                       " WHERE 'Status' = 'ACTIVE' AND 'Type' DOES NOT CONTAIN IGNORING CASE 'OVERFLOW' "+
-                      dateFilter+namefilter+evtFilter+retailerfilter+statefilter+" GROUP BY '"+groupby+"' ORDER BY SUM(Count) DESC ";
+                      dateFilter+namefilter+evtFilter+retailerfilter+statefilter+" GROUP BY '"+groupby+"' ORDER BY SUM(count) DESC ";
         console.log(sqlStmt);
         var selStmt = encodeURIComponent(sqlStmt);
         var access_token = "&access_token="+oAuthToken;
