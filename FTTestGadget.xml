@@ -57,10 +57,10 @@
         var data = new google.visualization.DataTable();
 
         //data.addColumn('string', 'Store Name');
-
-        data.addColumn('string', 'Agent Id');
-        data.addColumn('string', 'Store Name');
-        data.addColumn('string', 'Count');
+        //data.addColumn('string', 'Agent Id');
+        //data.addColumn('string', 'Store Name');
+        data.addColumn('string', 'Retailer');
+        data.addColumn('string', 'Parcel Count');
         
         data.addRows(ftrows);
 
@@ -198,13 +198,15 @@
           <option value="('PARCEL_COMPLETE')">Complete</option>
         </select>&nbsp;Retailer: <select id="retailer">
           <option value="">All</option>
-          <option value="('ebay','BigW','Ezibuy.com.au')">eBay,EB,BigW</option>
+          <option value="('ebay','BigW','EziBuy.com.au')">eBay,EB-AU,BigW</option>
           <option value="('BigW')">Big W</option>
           <option value="('ebay')">eBay</option>
-          <option value="('Ezibuy.com.au')">Ezibuy (AU) </option>
+          <option value="('EziBuy.com.au')">Ezibuy (AU) </option>
           <option value="('WOWCONNECT')">WOWConnect</option>
           <option value="('LastStopShop')">Last Stop Shop</option>
-           <option value="('SCDropOff')">Drop Off</option>
+          <option value="('SCDropOff')">Drop Off</option>
+          <option value="('WOWGROCERY')">Wow Online</option>
+        
         </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
   <button id="dwnldbtn" style="display:none" onclick="dataTableToCSV()">Download</button>
  
