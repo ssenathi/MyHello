@@ -129,7 +129,7 @@
         var evtFilter = " AND 'Event_Type' IN "+document.getElementById("evttype").value+"";
         var baseQuery = "https://www.googleapis.com/fusiontables/v2/query?sql=";
         var sqlStmt = "SELECT  '"+groupby+"' , SUM(count) as 'Count' FROM " + TABLE_ID +
-                      " WHERE 'Status' = 'ACTIVE' AND 'Type' DOES NOT CONTAIN IGNORING CASE 'OVERFLOW' "+
+                      " WHERE 'Status' = 'ACTIVE' AND 'Country' contains 'Australia' AND 'Type' DOES NOT CONTAIN IGNORING CASE 'OVERFLOW' "+
                       dateFilter+namefilter+evtFilter+retailerfilter+statefilter+" GROUP BY '"+groupby+"' ORDER BY SUM(count) DESC ";
         console.log(sqlStmt);
         var selStmt = encodeURIComponent(sqlStmt);
