@@ -135,18 +135,23 @@
         var selStmt = encodeURIComponent(sqlStmt);
         var access_token = "&access_token="+oAuthToken;
         var queryURL = baseQuery+selStmt+access_token;
-        
+        document.getElementById("table_div").style.visibility = "hidden";
+        docuemnt.getElementById("sbmtbtn").style.visibility="hidden";
         FlyJSONP.get({
             url: queryURL,
             success: function(data) {
-                console.log(data);
+                //console.log(data);
                 if (data.rows)
                    drawTable(data.rows);
                 else 
                     window.alert("No matching data found");
+                document.getElementById("table_div").style.visibility = "visible";
+                docuemnt.getElementById("sbmtbtn").style.visibility="visible";
             },
             error: function(errorMsg) {
                 window.alert(errorMsg.toString());
+                document.getElementById("table_div").style.visibility = "visible";
+                docuemnt.getElementById("sbmtbtn").style.visibility="visible";
                 oAuthToken = null;
             }
         });
@@ -234,7 +239,7 @@
           <option value="Name">Store</option>
           <option value="State">State</option>
           <option value="Postcode">Postcode</option>
-        </select>&nbsp;<input type=submit value="Submit" onclick="queryByStore()"/>&nbsp;
+        </select>&nbsp;<input type=submit id="sbmtbtn" value="Submit" onclick="queryByStore()"/>&nbsp;
   <button id="dwnldbtn" style="display:none" onclick="dataTableToCSV()">Download</button>
  
   <div style='width:800px;height:600px' id='table_div'></div>
