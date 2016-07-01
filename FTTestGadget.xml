@@ -136,7 +136,7 @@
         var access_token = "&access_token="+oAuthToken;
         var queryURL = baseQuery+selStmt+access_token;
         document.getElementById("table_div").style.visibility = "hidden";
-        docuemnt.getElementById("sbmtbtn").style.visibility="hidden";
+        document.getElementById("sbmtbtn").style.visibility="hidden";
         FlyJSONP.get({
             url: queryURL,
             success: function(data) {
@@ -146,12 +146,12 @@
                 else 
                     window.alert("No matching data found");
                 document.getElementById("table_div").style.visibility = "visible";
-                docuemnt.getElementById("sbmtbtn").style.visibility="visible";
+                document.getElementById("sbmtbtn").style.visibility="visible";
             },
             error: function(errorMsg) {
                 window.alert(errorMsg.toString());
                 document.getElementById("table_div").style.visibility = "visible";
-                docuemnt.getElementById("sbmtbtn").style.visibility="visible";
+                document.getElementById("sbmtbtn").style.visibility="visible";
                 oAuthToken = null;
             }
         });
