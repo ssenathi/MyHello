@@ -215,13 +215,13 @@
           <option value="('PARCEL_COMPLETE')">Complete</option>
         </select>&nbsp;Retailer: <select id="retailer">
           <option value="">All</option>
-          <option value="('ebay','BigW','EziBuy.com.au')">eBay,EB-AU,BigW</option>
-          <option value="('BigW')">Big W</option>
+          <option value="('ebay','EziBuy.com.au','WOWCONNECT','LastStopShop')">eBay,Ezibuy,WoWMobile,LSS</option>
+          <option value="('BigW')">Big W - Archive</option>
           <option value="('ebay')">eBay</option>
           <option value="('EziBuy.com.au')">Ezibuy (AU) </option>
           <option value="('WOWCONNECT')">WOWConnect</option>
           <option value="('LastStopShop')">Last Stop Shop</option>
-          <option value="('SCDropOff')">Drop Off</option>
+         
           <option value="('WOWGROCERY')">Wow Online</option>
         
         </select>&nbsp;State: <select id="state">
