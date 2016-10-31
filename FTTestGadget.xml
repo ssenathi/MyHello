@@ -211,7 +211,7 @@
         </select> &nbsp;Event : <select id="evttype">
           <option value="('PARCEL_BOOKED')">Booking</option>
           <option value="('PARCEL_ARRIVED','PARCEL_PARTIAL_ARRIVAL')">Arrival</option>
-          <option value="('PARCEL_COLLECTED')">Collected(eBay)</option>
+          <option value="('PARCEL_COLLECTED','PARCEL_PARTIAL_COLLECTION')">Collected(eBay)</option>
           <option value="('PARCEL_COMPLETE')">Complete</option>
         </select>&nbsp;Retailer: <select id="retailer">
           <option value="">All</option>
